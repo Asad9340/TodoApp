@@ -98,19 +98,26 @@ exports.updateTodoPriority = async (req, res) => {
 
 exports.filterTodos = async (req, res) => {
   try {
-    const { Status, Priority, DueDate } = req.query;
-    const filter = {};
+    const { Status, Priority, FromDate, ToDate } = req.query;
+    const UserName = req.user.UserName;
+    const filter = { UserName };
     if (Status) {
       filter.Status = Status;
     }
     if (Priority) {
       filter.Priority = Priority;
     }
-    if (DueDate) {
-      filter.DueDate = { $gte: new Date(DueDate) };
+    if (FromDate || ToDate) {
+      const dateFilter = {};
+      if (FromDate) {
+        dateFilter.$gte = new Date(FromDate);
+      }
+      if (ToDate) {
+        dateFilter.$lte = new Date(ToDate);
+      }
+      filter.DueDate = dateFilter;
     }
     const filteredTodos = await TodoListModel.find(filter);
-
     if (!filteredTodos || filteredTodos.length === 0) {
       return res
         .status(404)
