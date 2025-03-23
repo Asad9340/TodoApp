@@ -59,3 +59,65 @@ exports.deleteTodo = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+exports.updateTodoStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Status } = req.body;
+    const updatedTodo = await TodoListModel.findByIdAndUpdate(
+      id,
+      { Status },
+      { new: true }
+    );
+    if (!updatedTodo) {
+      return res.status(404).json({ error: 'Todo not found' });
+    }
+    res.status(200).json({ Status: true, data: updatedTodo });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.updateTodoPriority = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { Priority } = req.body;
+    const updatedTodo = await TodoListModel.findByIdAndUpdate(
+      id,
+      { Priority },
+      { new: true }
+    );
+    if (!updatedTodo) {
+      return res.status(404).json({ error: 'Todo not found' });
+    }
+    res.status(200).json({ Status: true, data: updatedTodo });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+exports.filterTodos = async (req, res) => {
+  try {
+    const { Status, Priority, DueDate } = req.query;
+    const filter = {};
+    if (Status) {
+      filter.Status = Status;
+    }
+    if (Priority) {
+      filter.Priority = Priority;
+    }
+    if (DueDate) {
+      filter.DueDate = { $gte: new Date(DueDate) };
+    }
+    const filteredTodos = await TodoListModel.find(filter);
+
+    if (!filteredTodos || filteredTodos.length === 0) {
+      return res
+        .status(404)
+        .json({ error: 'No todos found with the given filters' });
+    }
+    res.status(200).json({ Status: true, data: filteredTodos });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
