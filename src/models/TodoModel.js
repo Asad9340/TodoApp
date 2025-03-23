@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const TodoListSchema = mongoose.Schema(
   {
     UserName: { type: 'string' },
+    Email: { type: 'string' },
     Title: { type: String, required: true },
     Description: { type: String, required: true },
     DueDate: { type: Date },

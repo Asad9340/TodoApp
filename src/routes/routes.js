@@ -11,5 +11,8 @@ router.put('/updateUser', AuthVerifyMiddleware, ProfileController.updateUser);
 
 // todo routes
 router.post('/createTodo', AuthVerifyMiddleware, TodoListController.createTodo);
+router.get('/getTodos', AuthVerifyMiddleware, TodoListController.getTodos);
+router.put('/updateTodo/:id', AuthVerifyMiddleware, TodoListController.updateTodo);
+router.delete('/deleteTodo/:id', AuthVerifyMiddleware, TodoListController.deleteTodo);
 
 module.exports = router;
